@@ -1,7 +1,7 @@
 import type { FileReader } from "@release-kit/core/file-reader";
 import type { FileWriter } from "@release-kit/core/file-writer";
 import { describe, expect, it } from "vitest";
-import { npm } from "./strategy-npm.js";
+import { npm } from "./npm.js";
 
 const fakeReader = (files: Record<string, string>): FileReader => ({
   listFiles: async () => [],
