@@ -14,6 +14,7 @@
     "build": "tsc -b"
   },
   "dependencies": {
+    "gray-matter": "^4.0.3",
     "semver": "^7.7.4"
   },
   "devDependencies": {
