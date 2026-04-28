@@ -1,6 +1,6 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
-import type { FileReader } from "@release-kit/core/file-reader";
+import type { FileReader } from "@re-kit/core/file-reader";
 
 export const nodeFileReader: FileReader = {
   readFile: (path) => readFile(path, "utf-8"),

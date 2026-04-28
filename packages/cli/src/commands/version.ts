@@ -1,17 +1,17 @@
 import { join } from "node:path";
-import { computePlan } from "@release-kit/core/compute-plan";
-import type { Config, PackageConfig } from "@release-kit/core/config";
-import type { FileReader } from "@release-kit/core/file-reader";
-import type { FileWriter } from "@release-kit/core/file-writer";
-import type { GitAuthor, GitOps } from "@release-kit/core/git-ops";
-import { loadIntents } from "@release-kit/core/load-intents";
-import type { Mr } from "@release-kit/core/mr";
-import type { PackagePlan } from "@release-kit/core/package-plan";
-import { planMrs } from "@release-kit/core/plan-mrs";
-import type { MrRef, PlatformAdapter } from "@release-kit/core/platform-adapter";
-import { renderChangelogEntry } from "@release-kit/core/render-changelog-entry";
-import { renderMrBody } from "@release-kit/core/render-mr-body";
-import { semverVersioner } from "@release-kit/core/semver-versioner";
+import { computePlan } from "@re-kit/core/compute-plan";
+import type { Config, PackageConfig } from "@re-kit/core/config";
+import type { FileReader } from "@re-kit/core/file-reader";
+import type { FileWriter } from "@re-kit/core/file-writer";
+import type { GitAuthor, GitOps } from "@re-kit/core/git-ops";
+import { loadIntents } from "@re-kit/core/load-intents";
+import type { Mr } from "@re-kit/core/mr";
+import type { PackagePlan } from "@re-kit/core/package-plan";
+import { planMrs } from "@re-kit/core/plan-mrs";
+import type { MrRef, PlatformAdapter } from "@re-kit/core/platform-adapter";
+import { renderChangelogEntry } from "@re-kit/core/render-changelog-entry";
+import { renderMrBody } from "@re-kit/core/render-mr-body";
+import { semverVersioner } from "@re-kit/core/semver-versioner";
 
 export type VersionDeps = {
   readonly reader: FileReader;

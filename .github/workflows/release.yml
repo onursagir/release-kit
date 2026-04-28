@@ -52,14 +52,14 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           npm publish \
-            --workspace=@release-kit/${{ steps.detect.outputs.package }} \
+            --workspace=@re-kit/${{ steps.detect.outputs.package }} \
             --provenance \
             --access=public
 
-      - name: release-kit version
+      - name: re-kit version
         if: steps.detect.outputs.publish != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_KIT_AUTHOR_NAME: release-kit-bot
-          RELEASE_KIT_AUTHOR_EMAIL: release-kit-bot@users.noreply.github.com
+          RE_KIT_AUTHOR_NAME: re-kit-bot
+          RE_KIT_AUTHOR_EMAIL: re-kit-bot@users.noreply.github.com
         run: node packages/cli/dist/bin.js version

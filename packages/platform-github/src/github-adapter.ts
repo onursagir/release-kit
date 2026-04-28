@@ -4,7 +4,7 @@ import type {
   MrRef,
   OpenMrInput,
   PlatformAdapter,
-} from "@release-kit/core/platform-adapter";
+} from "@re-kit/core/platform-adapter";
 
 export type GitHubAdapterOptions = {
   readonly token: string;

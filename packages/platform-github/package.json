@@ -1,5 +1,5 @@
 {
-  "name": "@release-kit/platform-github",
+  "name": "@re-kit/platform-github",
   "version": "0.1.0",
   "description": "GitHub platform adapter for release-kit (find/open/update release PRs via the REST API).",
   "license": "MIT",
@@ -23,6 +23,6 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "@release-kit/core": "^0.1.0"
+    "@re-kit/core": "^0.1.0"
   }
 }

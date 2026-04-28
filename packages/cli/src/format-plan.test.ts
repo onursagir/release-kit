@@ -1,4 +1,4 @@
-import type { PackagePlan } from "@release-kit/core/package-plan";
+import type { PackagePlan } from "@re-kit/core/package-plan";
 import { describe, expect, it } from "vitest";
 import { formatPlan } from "./format-plan.js";
 

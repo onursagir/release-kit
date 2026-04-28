@@ -1,6 +1,6 @@
-import type { Config } from "@release-kit/core/config";
-import type { FileReader } from "@release-kit/core/file-reader";
-import type { Strategy } from "@release-kit/core/strategy";
+import type { Config } from "@re-kit/core/config";
+import type { FileReader } from "@re-kit/core/file-reader";
+import type { Strategy } from "@re-kit/core/strategy";
 import { describe, expect, it } from "vitest";
 import { runPlan } from "./plan.js";
 

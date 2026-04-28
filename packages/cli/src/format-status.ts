@@ -1,4 +1,4 @@
-import type { Intent } from "@release-kit/core/intent";
+import type { Intent } from "@re-kit/core/intent";
 
 export const formatStatus = (intents: readonly Intent[]): string => {
   if (intents.length === 0) return "No pending intents.";

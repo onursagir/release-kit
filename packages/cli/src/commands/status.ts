@@ -1,6 +1,6 @@
-import type { Config } from "@release-kit/core/config";
-import type { FileReader } from "@release-kit/core/file-reader";
-import { loadIntents } from "@release-kit/core/load-intents";
+import type { Config } from "@re-kit/core/config";
+import type { FileReader } from "@re-kit/core/file-reader";
+import { loadIntents } from "@re-kit/core/load-intents";
 import { formatStatus } from "../format-status.js";
 
 export type StatusDeps = {

@@ -1,15 +1,15 @@
-import type { Config } from "@release-kit/core/config";
-import type { FileReader } from "@release-kit/core/file-reader";
-import type { FileWriter } from "@release-kit/core/file-writer";
-import type { GitAuthor, GitOps } from "@release-kit/core/git-ops";
+import type { Config } from "@re-kit/core/config";
+import type { FileReader } from "@re-kit/core/file-reader";
+import type { FileWriter } from "@re-kit/core/file-writer";
+import type { GitAuthor, GitOps } from "@re-kit/core/git-ops";
 import type {
   FindMrInput,
   MrBody,
   MrRef,
   OpenMrInput,
   PlatformAdapter,
-} from "@release-kit/core/platform-adapter";
-import type { Strategy } from "@release-kit/core/strategy";
+} from "@re-kit/core/platform-adapter";
+import type { Strategy } from "@re-kit/core/strategy";
 import { beforeEach, describe, expect, it } from "vitest";
 import { runVersion } from "./version.js";
 

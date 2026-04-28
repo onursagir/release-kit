@@ -1,5 +1,5 @@
 {
-  "name": "@release-kit/cli",
+  "name": "@re-kit/cli",
   "version": "0.1.0",
   "description": "CLI for release-kit: status, plan, version, add.",
   "license": "MIT",
@@ -10,7 +10,7 @@
   },
   "type": "module",
   "bin": {
-    "release-kit": "./dist/bin.js"
+    "re-kit": "./dist/bin.js"
   },
   "files": ["dist"],
   "publishConfig": {
@@ -20,8 +20,8 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "@release-kit/core": "^0.1.0",
-    "@release-kit/platform-github": "^0.1.0",
+    "@re-kit/core": "^0.1.0",
+    "@re-kit/platform-github": "^0.1.0",
     "jiti": "^2.4.0"
   }
 }

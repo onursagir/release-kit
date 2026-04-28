@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import type { GitAuthor, GitOps } from "@release-kit/core/git-ops";
+import type { GitAuthor, GitOps } from "@re-kit/core/git-ops";
 
 const exec = promisify(execFile);
 

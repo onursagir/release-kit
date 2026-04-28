@@ -5,7 +5,7 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: /^@release-kit\/core\/(.+)$/,
+        find: /^@re-kit\/core\/(.+)$/,
         replacement: `${resolve(import.meta.dirname, "packages/core/src")}/$1.ts`,
       },
     ],
