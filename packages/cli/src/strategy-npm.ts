@@ -11,4 +11,11 @@ export const npm = (): Strategy => ({
     }
     return parsed.version;
   },
+  writeVersion: async (ctx, next) => {
+    const path = join(ctx.path, "package.json");
+    const raw = await ctx.reader.readFile(path);
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    parsed.version = next;
+    await ctx.writer.writeFile(path, `${JSON.stringify(parsed, null, 2)}\n`);
+  },
 });
