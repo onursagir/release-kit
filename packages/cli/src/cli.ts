@@ -3,7 +3,6 @@ import { runPlan } from "./commands/plan.js";
 import { runStatus } from "./commands/status.js";
 import { nodeFileReader } from "./file-reader-node.js";
 import { loadConfig } from "./load-config.js";
-import { readNpmVersion } from "./read-npm-version.js";
 
 const HELP = `release-kit <command> [options]
 
@@ -45,11 +44,7 @@ export const main = async (argv: readonly string[]): Promise<number> => {
 
   if (command === "plan") {
     const config = await loadConfig(configPath);
-    const out = await runPlan(
-      config,
-      { reader: nodeFileReader, readVersion: readNpmVersion },
-      { json: Boolean(values.json) },
-    );
+    const out = await runPlan(config, { reader: nodeFileReader }, { json: Boolean(values.json) });
     process.stdout.write(`${out}\n`);
     return 0;
   }

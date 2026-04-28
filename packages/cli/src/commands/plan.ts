@@ -7,7 +7,6 @@ import { formatPlan } from "../format-plan.js";
 
 export type PlanDeps = {
   readonly reader: FileReader;
-  readonly readVersion: (packagePath: string) => Promise<string>;
 };
 
 export type PlanOptions = {
@@ -23,7 +22,11 @@ export const runPlan = async (
 
   const versions: Record<string, string> = {};
   for (const pkg of config.packages) {
-    versions[pkg.name] = await deps.readVersion(pkg.path);
+    versions[pkg.name] = await pkg.strategy.readVersion({
+      name: pkg.name,
+      path: pkg.path,
+      reader: deps.reader,
+    });
   }
 
   const entries = computePlan(intents, versions, semverVersioner);
