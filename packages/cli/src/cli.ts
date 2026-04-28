@@ -1,5 +1,6 @@
 import { parseArgs } from "node:util";
 import { runPlan } from "./commands/plan.js";
+import { runStatus } from "./commands/status.js";
 import { nodeFileReader } from "./file-reader-node.js";
 import { loadConfig } from "./load-config.js";
 import { readNpmVersion } from "./read-npm-version.js";
@@ -7,6 +8,7 @@ import { readNpmVersion } from "./read-npm-version.js";
 const HELP = `release-kit <command> [options]
 
 Commands:
+  status      List pending intents grouped by package
   plan        Show pending intents and the computed version plan
 
 Options:
@@ -33,6 +35,13 @@ export const main = async (argv: readonly string[]): Promise<number> => {
 
   const command = positionals[0];
   const configPath = values.config ?? "release-kit.config.ts";
+
+  if (command === "status") {
+    const config = await loadConfig(configPath);
+    const out = await runStatus(config, { reader: nodeFileReader });
+    process.stdout.write(`${out}\n`);
+    return 0;
+  }
 
   if (command === "plan") {
     const config = await loadConfig(configPath);
