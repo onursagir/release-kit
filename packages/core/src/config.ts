@@ -6,7 +6,13 @@ export type PackageConfig = {
   readonly strategy: Strategy;
 };
 
+export type ReleasesConfig = {
+  readonly mode?: "isolated" | "combined";
+  readonly branchPrefix?: string;
+};
+
 export type Config = {
   readonly intentsDir: string;
   readonly packages: readonly PackageConfig[];
+  readonly releases?: ReleasesConfig;
 };
