@@ -1,0 +1,32 @@
+{
+  "name": "@release-kit/core",
+  "version": "0.1.0",
+  "description": "Pure functional core for release-kit: intent parsing, plan computation, changelog/MR rendering, semver versioner.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onursagir/release-kit.git",
+    "directory": "packages/core"
+  },
+  "type": "module",
+  "exports": {
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "semver": "^7.7.4"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.7.1"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@release-kit/platform-github",
+  "version": "0.1.0",
+  "description": "GitHub platform adapter for release-kit (find/open/update release PRs via the REST API).",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onursagir/release-kit.git",
+    "directory": "packages/platform-github"
+  },
+  "type": "module",
+  "exports": {
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@release-kit/core": "^0.1.0"
+  }
+}

@@ -1,0 +1,88 @@
+# Reusable GitHub Actions workflow for release-kit.
+#
+# Drop this into `.github/workflows/release.yml` of your repo, then:
+#   1. Make sure your repo has a `release-kit.config.ts` at the root.
+#   2. Add an `NPM_TOKEN` repo secret (only needed if any package is published to npm).
+#   3. Allow GitHub Actions to "create and approve pull requests" in repo settings →
+#      Actions → General → Workflow permissions.
+#
+# What this workflow does:
+#   * On every push to `main`, runs `release-kit version`. That opens (or
+#     updates) one release PR per package with pending intents (isolated mode).
+#   * When a release PR merges, the squash-merge commit subject looks like
+#     `Release: <package>@<version>`. The workflow detects that and runs
+#     `npm publish` for the corresponding npm workspace.
+#
+# Caveats:
+#   * Mandates squash-merge for release PRs (so the merge commit's subject is
+#     the PR title). Configure your repo to enforce that.
+#   * Assumes npm package name is `@<scope>/<package>` matching the
+#     release-kit `name` field. Tweak the `--workspace` flag below if your
+#     mapping differs.
+
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Detect release commit
+        id: detect
+        shell: bash
+        run: |
+          msg=$(git log -1 --pretty=%s)
+          echo "Last commit subject: $msg"
+          if [[ "$msg" =~ ^(Release|Hotfix):\ (.+)@([^@]+)$ ]]; then
+            pkg="${BASH_REMATCH[2]}"
+            ver="${BASH_REMATCH[3]}"
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+            echo "package=$pkg" >> "$GITHUB_OUTPUT"
+            echo "version=$ver" >> "$GITHUB_OUTPUT"
+            echo "Detected release: $pkg@$ver"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: npm publish
+        if: steps.detect.outputs.publish == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Adjust the npm scope to match your packages.
+          npm publish \
+            --workspace=@your-scope/${{ steps.detect.outputs.package }} \
+            --provenance \
+            --access=public
+
+      - name: release-kit version
+        if: steps.detect.outputs.publish != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_KIT_AUTHOR_NAME: release-kit-bot
+          RELEASE_KIT_AUTHOR_EMAIL: release-kit-bot@users.noreply.github.com
+        run: npx release-kit version
