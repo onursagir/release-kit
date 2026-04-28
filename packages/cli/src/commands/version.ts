@@ -3,19 +3,34 @@ import { computePlan } from "@release-kit/core/compute-plan";
 import type { Config, PackageConfig } from "@release-kit/core/config";
 import type { FileReader } from "@release-kit/core/file-reader";
 import type { FileWriter } from "@release-kit/core/file-writer";
+import type { GitAuthor, GitOps } from "@release-kit/core/git-ops";
 import { loadIntents } from "@release-kit/core/load-intents";
+import type { Mr } from "@release-kit/core/mr";
 import type { PackagePlan } from "@release-kit/core/package-plan";
+import { planMrs } from "@release-kit/core/plan-mrs";
+import type { MrRef, PlatformAdapter } from "@release-kit/core/platform-adapter";
 import { renderChangelogEntry } from "@release-kit/core/render-changelog-entry";
+import { renderMrBody } from "@release-kit/core/render-mr-body";
 import { semverVersioner } from "@release-kit/core/semver-versioner";
 
 export type VersionDeps = {
   readonly reader: FileReader;
   readonly writer: FileWriter;
+  readonly git: GitOps;
+  readonly adapter: PlatformAdapter;
   readonly now?: () => Date;
+  readonly author?: GitAuthor;
+};
+
+export type VersionMrResult = {
+  readonly mr: Mr;
+  readonly ref: MrRef;
+  readonly status: "opened" | "updated";
 };
 
 export type VersionResult = {
   readonly entries: readonly PackagePlan[];
+  readonly mrs: readonly VersionMrResult[];
 };
 
 const HEADER = "# Changelog\n\n";
@@ -38,9 +53,29 @@ const readChangelog = async (path: string, reader: FileReader): Promise<string> 
   }
 };
 
+const applyPackagePlan = async (
+  entry: PackagePlan,
+  pkg: PackageConfig,
+  intentsDir: string,
+  today: string,
+  deps: VersionDeps,
+): Promise<void> => {
+  await pkg.strategy.writeVersion(
+    { name: pkg.name, path: pkg.path, reader: deps.reader, writer: deps.writer },
+    entry.nextVersion,
+  );
+  const changelogPath = join(pkg.path, "CHANGELOG.md");
+  const existing = await readChangelog(changelogPath, deps.reader);
+  const rendered = renderChangelogEntry(entry, today);
+  await deps.writer.writeFile(changelogPath, prependChangelogEntry(existing, rendered));
+  for (const intent of entry.intents) {
+    await deps.writer.deleteFile(join(intentsDir, `${intent.id}.md`));
+  }
+};
+
 export const runVersion = async (config: Config, deps: VersionDeps): Promise<VersionResult> => {
   const intents = await loadIntents(config.intentsDir, deps.reader);
-  if (intents.length === 0) return { entries: [] };
+  if (intents.length === 0) return { entries: [], mrs: [] };
 
   const pkgsByName = new Map<string, PackageConfig>(config.packages.map((pkg) => [pkg.name, pkg]));
 
@@ -54,29 +89,44 @@ export const runVersion = async (config: Config, deps: VersionDeps): Promise<Ver
   }
 
   const plan = computePlan(intents, versions, semverVersioner);
+  const mrs = planMrs(plan, config);
   const today = (deps.now?.() ?? new Date()).toISOString().slice(0, 10);
-  const consumed = new Set<string>();
+  const startingRef = await deps.git.headRef();
 
-  for (const entry of plan) {
-    const pkg = pkgsByName.get(entry.package);
-    if (!pkg) throw new Error(`Plan references unknown package: ${entry.package}`);
+  const results: VersionMrResult[] = [];
+  for (const mr of mrs) {
+    await deps.git.createOrResetBranch(mr.branch, startingRef);
 
-    await pkg.strategy.writeVersion(
-      { name: pkg.name, path: pkg.path, reader: deps.reader, writer: deps.writer },
-      entry.nextVersion,
-    );
+    for (const entry of mr.packages) {
+      const pkg = pkgsByName.get(entry.package);
+      if (!pkg) throw new Error(`Plan references unknown package: ${entry.package}`);
+      await applyPackagePlan(entry, pkg, config.intentsDir, today, deps);
+    }
 
-    const changelogPath = join(pkg.path, "CHANGELOG.md");
-    const existing = await readChangelog(changelogPath, deps.reader);
-    const rendered = renderChangelogEntry(entry, today);
-    await deps.writer.writeFile(changelogPath, prependChangelogEntry(existing, rendered));
+    await deps.git.addAll();
+    if (!(await deps.git.hasStagedChanges())) continue;
 
-    for (const intent of entry.intents) consumed.add(intent.id);
+    const { title, body } = renderMrBody(mr);
+    await deps.git.commit(title, deps.author);
+    await deps.git.push(mr.branch, { force: true });
+
+    const existing = await deps.adapter.findOpenReleaseMr({
+      scope: mr.scope,
+      branch: mr.branch,
+    });
+    if (existing) {
+      await deps.adapter.updateReleaseMr(existing, { title, body });
+      results.push({ mr, ref: existing, status: "updated" });
+    } else {
+      const ref = await deps.adapter.openReleaseMr({
+        scope: mr.scope,
+        branch: mr.branch,
+        title,
+        body,
+      });
+      results.push({ mr, ref, status: "opened" });
+    }
   }
 
-  for (const id of consumed) {
-    await deps.writer.deleteFile(join(config.intentsDir, `${id}.md`));
-  }
-
-  return { entries: plan };
+  return { entries: plan, mrs: results };
 };

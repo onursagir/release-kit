@@ -11,6 +11,7 @@ const fakeStrategy = (versionByPath: Record<string, string>): Strategy => ({
     if (!v) throw new Error(`No version for ${path}`);
     return v;
   },
+  writeVersion: async () => {},
 });
 
 const baseConfig = (versions: Record<string, string>): Config => ({
