@@ -1,6 +1,6 @@
 {
   "name": "@re-kit/cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI for release-kit: status, plan, version, add.",
   "license": "MIT",
   "repository": {
@@ -12,7 +12,9 @@
   "bin": {
     "re-kit": "./dist/bin.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
