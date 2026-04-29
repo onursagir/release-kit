@@ -54,9 +54,7 @@ type GitCalls = {
   readonly pushes: { readonly branch: string; readonly force?: boolean }[];
 };
 
-const makeGit = (
-  startingRef = "abc123",
-): { ops: GitOps; calls: GitCalls } => {
+const makeGit = (startingRef = "abc123"): { ops: GitOps; calls: GitCalls } => {
   const calls: GitCalls = { branches: [], addAll: 0, commits: [], pushes: [] };
   let staged = false;
   const ops: GitOps = {

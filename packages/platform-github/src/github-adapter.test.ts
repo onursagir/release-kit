@@ -28,8 +28,7 @@ const stubFetch = (responses: readonly StubResponse[]) => {
       ]),
     );
     const bodyRaw = init?.body;
-    const body =
-      typeof bodyRaw === "string" ? (JSON.parse(bodyRaw) as unknown) : bodyRaw;
+    const body = typeof bodyRaw === "string" ? (JSON.parse(bodyRaw) as unknown) : bodyRaw;
     calls.push({ url, method, headers, body });
 
     const r = responses[i++] ?? { status: 200, json: {} };
@@ -154,7 +153,9 @@ describe("githubAdapter", () => {
   });
 
   it("throws a clear error including status when GitHub returns non-2xx", async () => {
-    const fetch = stubFetch([{ status: 422, statusText: "Unprocessable", text: '{"message":"bad"}' }]);
+    const fetch = stubFetch([
+      { status: 422, statusText: "Unprocessable", text: '{"message":"bad"}' },
+    ]);
     const adapter = githubAdapter({ ...baseOpts, fetch: fetch.fn });
     await expect(
       adapter.openReleaseMr({

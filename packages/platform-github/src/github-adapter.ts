@@ -26,11 +26,7 @@ export const githubAdapter = (opts: GitHubAdapterOptions): PlatformAdapter => {
   const fetchImpl = opts.fetch ?? fetch;
   let cachedDefaultBranch: string | undefined;
 
-  const request = async (
-    method: string,
-    path: string,
-    body?: unknown,
-  ): Promise<Response> => {
+  const request = async (method: string, path: string, body?: unknown): Promise<Response> => {
     const res = await fetchImpl(`${baseUrl}${path}`, {
       method,
       headers: {
