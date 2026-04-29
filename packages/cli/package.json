@@ -17,7 +17,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b && chmod +x dist/bin.js"
   },
   "dependencies": {
     "@re-kit/core": "^0.1.0",
