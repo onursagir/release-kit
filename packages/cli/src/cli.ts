@@ -1,8 +1,8 @@
 import { execFile } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { parseArgs, promisify } from "node:util";
-import { githubAdapter } from "@release-kit/platform-github/github-adapter";
-import { parseGitHubRemote } from "@release-kit/platform-github/parse-remote";
+import { githubAdapter } from "@re-kit/platform-github/github-adapter";
+import { parseGitHubRemote } from "@re-kit/platform-github/parse-remote";
 import { runAdd } from "./commands/add.js";
 import { runPlan } from "./commands/plan.js";
 import { runStatus } from "./commands/status.js";
@@ -19,7 +19,7 @@ const readOriginUrl = async (): Promise<string> => {
   return stdout.trim();
 };
 
-const HELP = `release-kit <command> [options]
+const HELP = `re-kit <command> [options]
 
 Commands:
   status      List pending intents grouped by package
@@ -28,7 +28,7 @@ Commands:
   add         Create a new intent file in the configured intentsDir
 
 Options:
-  --config <path>   Path to release-kit.config.ts (default: ./release-kit.config.ts)
+  --config <path>   Path to re-kit.config.ts (default: ./re-kit.config.ts)
   --json            Machine-readable output (plan)
   --help            Show this help
 
@@ -65,7 +65,7 @@ export const main = async (argv: readonly string[]): Promise<number> => {
       process.stderr.write("add requires --package, --bump, and --summary\n");
       return 1;
     }
-    const config = await loadConfig(values.config ?? "release-kit.config.ts");
+    const config = await loadConfig(values.config ?? "re-kit.config.ts");
     const result = await runAdd(
       config,
       { writer: nodeFileWriter, generateId },
@@ -95,7 +95,7 @@ export const main = async (argv: readonly string[]): Promise<number> => {
     return 0;
   }
 
-  const configPath = values.config ?? "release-kit.config.ts";
+  const configPath = values.config ?? "re-kit.config.ts";
 
   if (command === "status") {
     const config = await loadConfig(configPath);
@@ -121,8 +121,8 @@ export const main = async (argv: readonly string[]): Promise<number> => {
     const { owner, repo } = parseGitHubRemote(await readOriginUrl());
     const adapter = githubAdapter({ token, owner, repo });
     const author = {
-      name: process.env.RELEASE_KIT_AUTHOR_NAME ?? "release-kit",
-      email: process.env.RELEASE_KIT_AUTHOR_EMAIL ?? "release-kit@users.noreply.github.com",
+      name: process.env.RE_KIT_AUTHOR_NAME ?? "re-kit",
+      email: process.env.RE_KIT_AUTHOR_EMAIL ?? "re-kit@users.noreply.github.com",
     };
     const result = await runVersion(config, {
       reader: nodeFileReader,

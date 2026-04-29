@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import type { Strategy } from "@release-kit/core/strategy";
+import type { Strategy } from "@re-kit/core/strategy";
 
 export const npm = (): Strategy => ({
   name: "npm",

@@ -4,7 +4,7 @@ import type {
   MrRef,
   OpenMrInput,
   PlatformAdapter,
-} from "@release-kit/core/platform-adapter";
+} from "@re-kit/core/platform-adapter";
 
 export type GitHubAdapterOptions = {
   readonly token: string;
@@ -26,11 +26,7 @@ export const githubAdapter = (opts: GitHubAdapterOptions): PlatformAdapter => {
   const fetchImpl = opts.fetch ?? fetch;
   let cachedDefaultBranch: string | undefined;
 
-  const request = async (
-    method: string,
-    path: string,
-    body?: unknown,
-  ): Promise<Response> => {
+  const request = async (method: string, path: string, body?: unknown): Promise<Response> => {
     const res = await fetchImpl(`${baseUrl}${path}`, {
       method,
       headers: {

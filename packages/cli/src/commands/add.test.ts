@@ -1,7 +1,7 @@
-import type { Config } from "@release-kit/core/config";
-import type { FileWriter } from "@release-kit/core/file-writer";
-import { parseIntent } from "@release-kit/core/parse-intent";
-import type { Strategy } from "@release-kit/core/strategy";
+import type { Config } from "@re-kit/core/config";
+import type { FileWriter } from "@re-kit/core/file-writer";
+import { parseIntent } from "@re-kit/core/parse-intent";
+import type { Strategy } from "@re-kit/core/strategy";
 import { describe, expect, it } from "vitest";
 import { runAdd } from "./add.js";
 

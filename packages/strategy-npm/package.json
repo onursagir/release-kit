@@ -1,5 +1,5 @@
 {
-  "name": "@release-kit/strategy-npm",
+  "name": "@re-kit/strategy-npm",
   "version": "0.1.0",
   "description": "release-kit strategy for npm packages (reads/writes package.json).",
   "license": "MIT",
@@ -23,6 +23,6 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "@release-kit/core": "^0.1.0"
+    "@re-kit/core": "^0.1.0"
   }
 }

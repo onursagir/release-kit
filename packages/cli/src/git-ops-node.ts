@@ -1,6 +1,6 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import type { GitAuthor, GitOps } from "@release-kit/core/git-ops";
+import type { GitAuthor, GitOps } from "@re-kit/core/git-ops";
 
 const exec = promisify(execFile);
 
@@ -10,7 +10,10 @@ export type NodeGitOpsOptions = {
 
 export const nodeGitOps = (opts: NodeGitOpsOptions = {}): GitOps => {
   const cwd = opts.cwd ?? process.cwd();
-  const run = async (args: readonly string[], extraEnv?: Record<string, string>): Promise<string> => {
+  const run = async (
+    args: readonly string[],
+    extraEnv?: Record<string, string>,
+  ): Promise<string> => {
     const { stdout } = await exec("git", args as string[], {
       cwd,
       env: extraEnv ? { ...process.env, ...extraEnv } : process.env,
@@ -36,10 +39,7 @@ export const nodeGitOps = (opts: NodeGitOpsOptions = {}): GitOps => {
       }
     },
     commit: async (message, author) => {
-      await run(
-        ["commit", "-m", message],
-        commitEnv(author),
-      );
+      await run(["commit", "-m", message], commitEnv(author));
     },
     push: async (branch, options) => {
       const args = ["push", "origin", branch];

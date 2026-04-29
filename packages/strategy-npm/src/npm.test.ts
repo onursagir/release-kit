@@ -1,5 +1,5 @@
-import type { FileReader } from "@release-kit/core/file-reader";
-import type { FileWriter } from "@release-kit/core/file-writer";
+import type { FileReader } from "@re-kit/core/file-reader";
+import type { FileWriter } from "@re-kit/core/file-writer";
 import { describe, expect, it } from "vitest";
 import { npm } from "./npm.js";
 

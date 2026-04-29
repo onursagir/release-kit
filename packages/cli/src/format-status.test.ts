@@ -1,4 +1,4 @@
-import type { Intent } from "@release-kit/core/intent";
+import type { Intent } from "@re-kit/core/intent";
 import { describe, expect, it } from "vitest";
 import { formatStatus } from "./format-status.js";
 

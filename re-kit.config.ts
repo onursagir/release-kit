@@ -1,5 +1,5 @@
-import type { Config } from "@release-kit/core/config";
-import { npm } from "@release-kit/strategy-npm/npm";
+import type { Config } from "@re-kit/core/config";
+import { npm } from "@re-kit/strategy-npm/npm";
 
 const config: Config = {
   intentsDir: ".changes",

@@ -1,4 +1,4 @@
-import type { PackagePlan } from "@release-kit/core/package-plan";
+import type { PackagePlan } from "@re-kit/core/package-plan";
 
 const formatEntry = (e: PackagePlan): string => {
   const tag = e.hotfix ? " (hotfix)" : "";

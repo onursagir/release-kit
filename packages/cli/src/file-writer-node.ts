@@ -1,6 +1,6 @@
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { FileWriter } from "@release-kit/core/file-writer";
+import type { FileWriter } from "@re-kit/core/file-writer";
 
 export const nodeFileWriter: FileWriter = {
   writeFile: async (path, content) => {

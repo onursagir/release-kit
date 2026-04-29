@@ -1,8 +1,8 @@
 import { join } from "node:path";
-import type { Config } from "@release-kit/core/config";
-import type { FileWriter } from "@release-kit/core/file-writer";
-import { parseBump } from "@release-kit/core/parse-bump";
-import { renderIntent } from "@release-kit/core/render-intent";
+import type { Config } from "@re-kit/core/config";
+import type { FileWriter } from "@re-kit/core/file-writer";
+import { parseBump } from "@re-kit/core/parse-bump";
+import { renderIntent } from "@re-kit/core/render-intent";
 
 export type AddDeps = {
   readonly writer: FileWriter;

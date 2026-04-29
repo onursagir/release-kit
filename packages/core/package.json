@@ -1,5 +1,5 @@
 {
-  "name": "@release-kit/core",
+  "name": "@re-kit/core",
   "version": "0.1.0",
   "description": "Pure functional core for release-kit: intent parsing, plan computation, changelog/MR rendering, semver versioner.",
   "license": "MIT",

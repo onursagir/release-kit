@@ -1,8 +1,8 @@
-import { computePlan } from "@release-kit/core/compute-plan";
-import type { Config } from "@release-kit/core/config";
-import type { FileReader } from "@release-kit/core/file-reader";
-import { loadIntents } from "@release-kit/core/load-intents";
-import { semverVersioner } from "@release-kit/core/semver-versioner";
+import { computePlan } from "@re-kit/core/compute-plan";
+import type { Config } from "@re-kit/core/config";
+import type { FileReader } from "@re-kit/core/file-reader";
+import { loadIntents } from "@re-kit/core/load-intents";
+import { semverVersioner } from "@re-kit/core/semver-versioner";
 import { formatPlan } from "../format-plan.js";
 
 export type PlanDeps = {

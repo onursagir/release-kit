@@ -1,5 +1,5 @@
 import { resolve } from "node:path";
-import type { Config } from "@release-kit/core/config";
+import type { Config } from "@re-kit/core/config";
 import { createJiti } from "jiti";
 
 const jiti = createJiti(import.meta.url);
