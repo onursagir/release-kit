@@ -12,9 +12,7 @@
   "bin": {
     "re-kit": "./dist/bin.js"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "publishConfig": {
     "access": "public"
   },

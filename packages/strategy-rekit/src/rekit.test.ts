@@ -70,7 +70,11 @@ describe("rekit() strategy", () => {
     it("writes the new version into re-kit.json preserving other fields", async () => {
       const strategy = rekit();
       const reader = fakeReader({
-        "actions/re-kit.json": JSON.stringify({ version: "1.2.3", description: "the actions" }, null, 2),
+        "actions/re-kit.json": JSON.stringify(
+          { version: "1.2.3", description: "the actions" },
+          null,
+          2,
+        ),
       });
       const { writer, written } = captureWriter();
       await strategy.writeVersion({ name: "actions", path: "actions", reader, writer }, "1.3.0");
