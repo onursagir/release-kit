@@ -23,7 +23,7 @@ runs:
       run: |
         msg=$(git log -1 --pretty=%s)
         echo "Last commit subject: $msg"
-        if [[ "$msg" =~ ^(Release|Hotfix):\ (.+)@([^@]+)$ ]]; then
+        if [[ "$msg" =~ ^(Release|Hotfix):\ (.+)@([^@\ ]+)(\ \(#[0-9]+\))?$ ]]; then
           kind=$(echo "${BASH_REMATCH[1]}" | tr '[:upper:]' '[:lower:]')
           echo "publish=true"          >> "$GITHUB_OUTPUT"
           echo "kind=$kind"             >> "$GITHUB_OUTPUT"
