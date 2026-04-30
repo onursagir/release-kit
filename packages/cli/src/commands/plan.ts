@@ -1,12 +1,14 @@
 import { computePlan } from "@re-kit/core/compute-plan";
 import type { Config } from "@re-kit/core/config";
 import type { FileReader } from "@re-kit/core/file-reader";
+import type { GitTagReader } from "@re-kit/core/git-tag-reader";
 import { loadIntents } from "@re-kit/core/load-intents";
 import { semverVersioner } from "@re-kit/core/semver-versioner";
 import { formatPlan } from "../format-plan.js";
 
 export type PlanDeps = {
   readonly reader: FileReader;
+  readonly git: GitTagReader;
 };
 
 export type PlanOptions = {
@@ -26,6 +28,7 @@ export const runPlan = async (
       name: pkg.name,
       path: pkg.path,
       reader: deps.reader,
+      git: deps.git,
     });
   }
 

@@ -1,0 +1,28 @@
+{
+  "name": "@re-kit/strategy-rekit",
+  "version": "0.1.0",
+  "description": "re-kit strategy for projects without a native manifest (reads/writes a re-kit.json file).",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onursagir/release-kit.git",
+    "directory": "packages/strategy-rekit"
+  },
+  "type": "module",
+  "exports": {
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@re-kit/core": "^0.1.0"
+  }
+}

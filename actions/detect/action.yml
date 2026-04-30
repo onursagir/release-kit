@@ -1,0 +1,35 @@
+name: re-kit detect release
+description: >
+  Inspect the last commit subject and emit outputs identifying whether it is a
+  release or hotfix merge, along with the package and version it released.
+outputs:
+  publish:
+    description: '"true" when the last commit looks like a release/hotfix merge, otherwise "false".'
+    value: ${{ steps.detect.outputs.publish }}
+  kind:
+    description: '"release" or "hotfix" — only set when publish is true.'
+    value: ${{ steps.detect.outputs.kind }}
+  package:
+    description: Package name parsed from the release commit subject. Only set when publish is true.
+    value: ${{ steps.detect.outputs.package }}
+  version:
+    description: Version parsed from the release commit subject. Only set when publish is true.
+    value: ${{ steps.detect.outputs.version }}
+runs:
+  using: composite
+  steps:
+    - id: detect
+      shell: bash
+      run: |
+        msg=$(git log -1 --pretty=%s)
+        echo "Last commit subject: $msg"
+        if [[ "$msg" =~ ^(Release|Hotfix):\ (.+)@([^@]+)$ ]]; then
+          kind=$(echo "${BASH_REMATCH[1]}" | tr '[:upper:]' '[:lower:]')
+          echo "publish=true"          >> "$GITHUB_OUTPUT"
+          echo "kind=$kind"             >> "$GITHUB_OUTPUT"
+          echo "package=${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
+          echo "version=${BASH_REMATCH[3]}" >> "$GITHUB_OUTPUT"
+          echo "Detected $kind: ${BASH_REMATCH[2]}@${BASH_REMATCH[3]}"
+        else
+          echo "publish=false" >> "$GITHUB_OUTPUT"
+        fi

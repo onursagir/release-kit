@@ -1,0 +1,46 @@
+name: re-kit version
+description: >
+  Run `re-kit version` against the current checkout, opening or updating one
+  release PR per package with pending intents.
+inputs:
+  github-token:
+    description: GitHub token. Needs contents:write and pull-requests:write.
+    required: true
+  config:
+    description: Path to re-kit.config.ts. Defaults to ./re-kit.config.ts (the CLI default).
+    required: false
+    default: ''
+  author-name:
+    description: Git author name for the release commits.
+    required: false
+    default: re-kit-bot
+  author-email:
+    description: Git author email for the release commits.
+    required: false
+    default: re-kit-bot@users.noreply.github.com
+  working-directory:
+    description: Directory to run the command in.
+    required: false
+    default: '.'
+  cli-package:
+    description: >
+      npx target used to invoke the CLI. Defaults to "@re-kit/cli" (latest from
+      npm). Pin a version with "@re-kit/cli@0.1.1", or pass a path
+      (e.g. "./packages/cli") to run a local checkout — useful for dogfooding.
+    required: false
+    default: '@re-kit/cli'
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        RE_KIT_AUTHOR_NAME: ${{ inputs.author-name }}
+        RE_KIT_AUTHOR_EMAIL: ${{ inputs.author-email }}
+      run: |
+        args=()
+        if [ -n "${{ inputs.config }}" ]; then
+          args+=(--config "${{ inputs.config }}")
+        fi
+        npx --yes "${{ inputs.cli-package }}" version "${args[@]}"

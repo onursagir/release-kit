@@ -106,7 +106,11 @@ export const main = async (argv: readonly string[]): Promise<number> => {
 
   if (command === "plan") {
     const config = await loadConfig(configPath);
-    const out = await runPlan(config, { reader: nodeFileReader }, { json: Boolean(values.json) });
+    const out = await runPlan(
+      config,
+      { reader: nodeFileReader, git: nodeGitOps() },
+      { json: Boolean(values.json) },
+    );
     process.stdout.write(`${out}\n`);
     return 0;
   }

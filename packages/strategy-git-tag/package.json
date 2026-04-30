@@ -1,0 +1,32 @@
+{
+  "name": "@re-kit/strategy-git-tag",
+  "version": "0.1.0",
+  "description": "re-kit strategy for projects whose version is the latest matching git tag (actions, terraform modules, anything pulled by git ref).",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onursagir/release-kit.git",
+    "directory": "packages/strategy-git-tag"
+  },
+  "type": "module",
+  "exports": {
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
+  "files": ["dist"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@re-kit/core": "^0.1.0",
+    "semver": "^7.7.4"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.7.1"
+  }
+}

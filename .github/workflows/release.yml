@@ -29,25 +29,11 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Detect release commit
-        id: detect
-        shell: bash
-        run: |
-          msg=$(git log -1 --pretty=%s)
-          echo "Last commit subject: $msg"
-          if [[ "$msg" =~ ^(Release|Hotfix):\ (.+)@([^@]+)$ ]]; then
-            pkg="${BASH_REMATCH[2]}"
-            ver="${BASH_REMATCH[3]}"
-            echo "publish=true" >> "$GITHUB_OUTPUT"
-            echo "package=$pkg" >> "$GITHUB_OUTPUT"
-            echo "version=$ver" >> "$GITHUB_OUTPUT"
-            echo "Detected release: $pkg@$ver"
-          else
-            echo "publish=false" >> "$GITHUB_OUTPUT"
-          fi
+      - id: detect
+        uses: ./actions/detect
 
       - name: npm publish
-        if: steps.detect.outputs.publish == 'true'
+        if: steps.detect.outputs.publish == 'true' && steps.detect.outputs.package != 'actions'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
@@ -56,10 +42,20 @@ jobs:
             --provenance \
             --access=public
 
-      - name: re-kit version
-        if: steps.detect.outputs.publish != 'true'
+      - name: Tag release
+        if: steps.detect.outputs.publish == 'true'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RE_KIT_AUTHOR_NAME: re-kit-bot
-          RE_KIT_AUTHOR_EMAIL: re-kit-bot@users.noreply.github.com
-        run: node packages/cli/dist/bin.js version
+          GIT_AUTHOR_NAME: re-kit-bot
+          GIT_AUTHOR_EMAIL: re-kit-bot@users.noreply.github.com
+          GIT_COMMITTER_NAME: re-kit-bot
+          GIT_COMMITTER_EMAIL: re-kit-bot@users.noreply.github.com
+        run: |
+          tag="${{ steps.detect.outputs.package }}-v${{ steps.detect.outputs.version }}"
+          git tag "$tag"
+          git push origin "$tag"
+
+      - if: steps.detect.outputs.publish != 'true'
+        uses: ./actions/version
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cli-package: ./packages/cli

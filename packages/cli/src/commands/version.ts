@@ -61,7 +61,13 @@ const applyPackagePlan = async (
   deps: VersionDeps,
 ): Promise<void> => {
   await pkg.strategy.writeVersion(
-    { name: pkg.name, path: pkg.path, reader: deps.reader, writer: deps.writer },
+    {
+      name: pkg.name,
+      path: pkg.path,
+      reader: deps.reader,
+      writer: deps.writer,
+      git: deps.git,
+    },
     entry.nextVersion,
   );
   const changelogPath = join(pkg.path, "CHANGELOG.md");
@@ -85,6 +91,7 @@ export const runVersion = async (config: Config, deps: VersionDeps): Promise<Ver
       name: pkg.name,
       path: pkg.path,
       reader: deps.reader,
+      git: deps.git,
     });
   }
 

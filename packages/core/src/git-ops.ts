@@ -1,4 +1,6 @@
-export type GitOps = {
+import type { GitTagReader } from "./git-tag-reader.js";
+
+export type GitOps = GitTagReader & {
   readonly headRef: () => Promise<string>;
   readonly currentBranch: () => Promise<string>;
   readonly createOrResetBranch: (name: string, fromRef: string) => Promise<void>;

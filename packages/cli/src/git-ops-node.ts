@@ -22,6 +22,13 @@ export const nodeGitOps = (opts: NodeGitOpsOptions = {}): GitOps => {
   };
 
   return {
+    listTags: async (pattern) => {
+      const out = await run(["tag", "--list", pattern]);
+      return out
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
+    },
     headRef: async () => (await run(["rev-parse", "HEAD"])).trim(),
     currentBranch: async () => (await run(["rev-parse", "--abbrev-ref", "HEAD"])).trim(),
     createOrResetBranch: async (name, fromRef) => {

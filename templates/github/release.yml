@@ -7,18 +7,19 @@
 #      Actions → General → Workflow permissions.
 #
 # What this workflow does:
-#   * On every push to `main`, runs `re-kit version`. That opens (or
+#   * On every push to `main`, runs `re-kit version` via the
+#     `onursagir/release-kit/actions/version` composite action. That opens (or
 #     updates) one release PR per package with pending intents (isolated mode).
 #   * When a release PR merges, the squash-merge commit subject looks like
-#     `Release: <package>@<version>`. The workflow detects that and runs
-#     `npm publish` for the corresponding npm workspace.
+#     `Release: <package>@<version>`. The `actions/detect` action picks that
+#     up and emits `publish`/`package`/`version` outputs you key your publish
+#     step off — npm, cargo, helm, whatever your strategy needs.
 #
 # Caveats:
 #   * Mandates squash-merge for release PRs (so the merge commit's subject is
 #     the PR title). Configure your repo to enforce that.
-#   * Assumes npm package name is `@<scope>/<package>` matching the
-#     re-kit `name` field. Tweak the `--workspace` flag below if your
-#     mapping differs.
+#   * The `npm publish` step assumes your package names are `@<scope>/<package>`
+#     matching the re-kit `name` field. Tweak as needed for your setup.
 
 name: Release
 
@@ -51,22 +52,10 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Detect release commit
-        id: detect
-        shell: bash
-        run: |
-          msg=$(git log -1 --pretty=%s)
-          echo "Last commit subject: $msg"
-          if [[ "$msg" =~ ^(Release|Hotfix):\ (.+)@([^@]+)$ ]]; then
-            pkg="${BASH_REMATCH[2]}"
-            ver="${BASH_REMATCH[3]}"
-            echo "publish=true" >> "$GITHUB_OUTPUT"
-            echo "package=$pkg" >> "$GITHUB_OUTPUT"
-            echo "version=$ver" >> "$GITHUB_OUTPUT"
-            echo "Detected release: $pkg@$ver"
-          else
-            echo "publish=false" >> "$GITHUB_OUTPUT"
-          fi
+      # Pin both actions to the same tag in real usage. `@main` is fine for
+      # tracking head, but bumps to the actions can break you on green pushes.
+      - id: detect
+        uses: onursagir/release-kit/actions/detect@main
 
       - name: npm publish
         if: steps.detect.outputs.publish == 'true'
@@ -79,10 +68,7 @@ jobs:
             --provenance \
             --access=public
 
-      - name: re-kit version
-        if: steps.detect.outputs.publish != 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RE_KIT_AUTHOR_NAME: re-kit-bot
-          RE_KIT_AUTHOR_EMAIL: re-kit-bot@users.noreply.github.com
-        run: npx re-kit version
+      - if: steps.detect.outputs.publish != 'true'
+        uses: onursagir/release-kit/actions/version@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
