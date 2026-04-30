@@ -49,7 +49,9 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
-      - run: npm ci
+      # `npm install` (rather than `npm ci`) lets the runner reconcile a
+      # lockfile drifted by the version action's package.json bump.
+      - run: npm install --no-audit --no-fund
       - run: npm run build
 
       # Pin both actions to the same tag in real usage. `@main` is fine for
@@ -67,6 +69,18 @@ jobs:
             --workspace=@your-scope/${{ steps.detect.outputs.package }} \
             --provenance \
             --access=public
+
+      - name: Tag release
+        if: steps.detect.outputs.publish == 'true'
+        env:
+          GIT_AUTHOR_NAME: re-kit-bot
+          GIT_AUTHOR_EMAIL: re-kit-bot@users.noreply.github.com
+          GIT_COMMITTER_NAME: re-kit-bot
+          GIT_COMMITTER_EMAIL: re-kit-bot@users.noreply.github.com
+        run: |
+          tag="${{ steps.detect.outputs.package }}-v${{ steps.detect.outputs.version }}"
+          git tag "$tag"
+          git push origin "$tag"
 
       - if: steps.detect.outputs.publish != 'true'
         uses: onursagir/release-kit/actions/version@main
