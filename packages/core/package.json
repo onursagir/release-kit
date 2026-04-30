@@ -1,6 +1,6 @@
 {
   "name": "@re-kit/core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Pure functional core for release-kit: intent parsing, plan computation, changelog/MR rendering, semver versioner.",
   "license": "MIT",
   "repository": {
@@ -15,7 +15,9 @@
       "import": "./dist/*.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
