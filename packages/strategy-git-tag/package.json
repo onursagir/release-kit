@@ -23,7 +23,7 @@
     "build": "tsc -b"
   },
   "dependencies": {
-    "@re-kit/core": "^0.1.0",
+    "@re-kit/core": "^0.2.0",
     "semver": "^7.7.4"
   },
   "devDependencies": {

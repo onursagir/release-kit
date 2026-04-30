@@ -12,9 +12,7 @@
   "bin": {
     "re-kit": "./dist/bin.js"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "publishConfig": {
     "access": "public"
   },
@@ -22,7 +20,7 @@
     "build": "tsc -b && chmod +x dist/bin.js"
   },
   "dependencies": {
-    "@re-kit/core": "^0.1.0",
+    "@re-kit/core": "^0.2.0",
     "@re-kit/platform-github": "^0.1.0",
     "jiti": "^2.4.0"
   }
